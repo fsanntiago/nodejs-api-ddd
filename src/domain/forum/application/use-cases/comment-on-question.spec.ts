@@ -38,7 +38,7 @@ describe('Comment On Question', () => {
     )
   })
 
-  it.skip('should not be able to comment on question that do not exist', async () => {
+  it('should not be able to comment on question that do not exist', async () => {
     await expect(() =>
       sut.execute({
         authorId: 'author-1',
