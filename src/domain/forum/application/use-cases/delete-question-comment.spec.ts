@@ -37,7 +37,7 @@ describe('Delete Question Comment', () => {
 
     const result = await sut.execute({
       authorId: 'author-2',
-      questionCommentId: newQuestionComment.questionId.toString(),
+      questionCommentId: newQuestionComment.id.toString(),
     })
 
     expect(result.isLeft()).toBe(true)

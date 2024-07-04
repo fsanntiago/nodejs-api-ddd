@@ -1,8 +1,9 @@
+import { AggregateRoot } from '@/shared/entities/aggregate-root'
 import { Slug } from './value-objects/slug'
-import { Entity } from '@/shared/entities/entity'
 import { UniqueEntityID } from '@/shared/entities/unique-entity-id'
 import { Optional } from '@/shared/types/optional'
 import dayjs from 'dayjs'
+import { QuestionAttachmentList } from './quesiton-attachment-list'
 
 export interface QuestionProps {
   authorId: UniqueEntityID
@@ -10,15 +11,12 @@ export interface QuestionProps {
   title: string
   content: string
   slug: Slug
+  attachments: QuestionAttachmentList
   createdAt: Date
   updateAt?: Date
 }
 
-export class Question extends Entity<QuestionProps> {
-  get content() {
-    return this.props.content
-  }
-
+export class Question extends AggregateRoot<QuestionProps> {
   get authorId() {
     return this.props.authorId
   }
@@ -27,20 +25,28 @@ export class Question extends Entity<QuestionProps> {
     return this.props.bestAnswerId
   }
 
+  get title() {
+    return this.props.title
+  }
+
+  get content() {
+    return this.props.content
+  }
+
+  get slug() {
+    return this.props.slug
+  }
+
+  get attachments() {
+    return this.props.attachments
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
 
   get updateAt() {
     return this.props.updateAt
-  }
-
-  get title() {
-    return this.props.title
-  }
-
-  get slug() {
-    return this.props.slug
   }
 
   get isNew(): boolean {
@@ -55,14 +61,19 @@ export class Question extends Entity<QuestionProps> {
     this.props.updateAt = new Date()
   }
 
+  set title(title: string) {
+    this.props.title = title
+    this.props.slug = Slug.createFromText(title)
+    this.touch()
+  }
+
   set content(content: string) {
     this.props.content = content
     this.touch()
   }
 
-  set title(title: string) {
-    this.props.title = title
-    this.props.slug = Slug.createFromText(title)
+  set attachments(attachments: QuestionAttachmentList) {
+    this.props.attachments = attachments
     this.touch()
   }
 
@@ -72,14 +83,15 @@ export class Question extends Entity<QuestionProps> {
   }
 
   static create(
-    props: Optional<QuestionProps, 'createdAt' | 'slug'>,
+    props: Optional<QuestionProps, 'createdAt' | 'slug' | 'attachments'>,
     id?: UniqueEntityID,
   ) {
     const question = new Question(
       {
         ...props,
-        createdAt: props.createdAt ?? new Date(),
         slug: props.slug ?? Slug.createFromText(props.title),
+        createdAt: props.createdAt ?? new Date(),
+        attachments: props.attachments ?? new QuestionAttachmentList(),
       },
       id,
     )
