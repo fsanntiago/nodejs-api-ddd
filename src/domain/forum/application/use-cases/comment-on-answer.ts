@@ -1,10 +1,10 @@
-import { Either, left, right } from './../../../../shared/either'
-import { UniqueEntityID } from '../../../../shared/entities/unique-entity-id'
+import { Either, left, right } from '@/shared/either'
+import { UniqueEntityID } from '@/shared/entities/unique-entity-id'
 import { AnswersRepository } from '../repositories/answers-repository'
 import { AnswerComment } from '../../enterprise/entities/answer-comment'
 import { AnswerCommentsRepository } from '../repositories/answer-comments-repository'
-import { NotAllowedError } from './errors/not-allowed-error'
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { NotAllowedError } from '@/shared/errors/custom-errors/not-allowed-error'
+import { ResourceNotFoundError } from '@/shared/errors/custom-errors/resource-not-found-error'
 
 interface CommentOnAnswerUseCaseRequest {
   authorId: string
